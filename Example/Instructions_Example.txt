@@ -1,0 +1,28 @@
+Files in this directory describe the generation of exposure values and the simulation of transmission bottlenecks for the office environment.
+
+./0_restore.sh
+
+This resets the files in the directory.  Note the files in the Data/Office directory.
+
+./1_run_office_exposures.sh
+
+This generates exposure values for the office environment, calculating exposure levels for particles of radii from 1 to 500um.  The code may take approximately 20-30 minutes to run depending on your machine.  Output files are stored
+
+./2_get_bottlenecks.sh
+
+This calculates simulated bottleneck sizes from the exposure files.  A total of 10^6 simulations are run for a variety of effective viral loads.  This script may also take around 20-30 minutes.
+
+./3_process_filenames.sh
+
+This performs some simple renaming of files for consistency
+
+./4_process_bottlenecks.sh
+
+This rearranges the bottleneck size data into a more readable format using a perl script.
+
+
+Output files:
+
+The final files generated are of the form Data/Office/Bottnecks_Cough_Absorbing_phiX_vm1.dat.count.  A pre-calculated set of files is included in the Example_outputs directory.  They show bottleneck sizes for cases of infection across the simulations that were generated.
+
+The filenames of the output files indicate that the code has been run for the office environment, simulating a cough with standard volume (vm1 i.e. multiplied by 1), with the walls absorbing emitted particles, and with the parameter phi_env set to X.  See Supporting Text for more information about the phi_env parameter. 

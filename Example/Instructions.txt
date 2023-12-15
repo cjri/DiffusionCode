@@ -1,0 +1,2 @@
+Example generation of exposure values
+

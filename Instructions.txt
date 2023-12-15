@@ -1,0 +1,129 @@
+This code simualates exposures in a two-dimensional environment following an emission of particles.  It then simulates bottleneck sizes in cases of viral transmission.
+
+Generating exposures:
+
+The code is run using the command
+
+./run_diffusion
+
+with various flags and inputs.
+
+The code reads inputs from the directory Data/<environment> where the environment is specified using the --env flag.
+
+The code has two basic means of calculation, specified by a single flag:
+
+--method m  [Default: 'Generation'.  Option 'Analysis']
+
+Generation Method:
+
+Inputs:
+
+Parameters.dat contains the following data, in a single tab-separated line.
+
+X: 	Length of room (m)
+Y:	Width of room (m)
+Z:	Height of room (m)
+Gamma:	Number of air changes in the room per hour
+z_0:	Height at which particles are emitted (m)
+max_T:	Number of hours simulated in this environment
+I:	Volume of air inhaled by people in this environment (L/minute)
+
+Locations.dat contains the (x,y) coordinates of people in the environment.  The first pair of numbers describes the location of the infected individual.
+
+The file Data/<environment>/Initial_distribution/<type of emission>_grid.dat where the type of emission is specified using the --emm flag.
+
+This file contains details of the initial emission, in coordinates relative to the location of the infected person.  This file describes coordinates x, y, and f, where f is the density of the emission at (x,y) at time zero.
+
+
+Flags:
+
+The generation code uses the following flags:
+
+--env e [Default Office] : Environment e.g. Office.  Needs files to be set up for the environment.
+
+--emm m [Default Cough] : Type of emission e.g. Cough.
+
+--radius r [Default 10] : Radius of particle being simulated in microns
+
+--opt_t0: Flag to optimise the initial time t_0 from which diffusion is measured.
+
+If opt_t0 is set to 1, the code runs an optimisation which calculates an initial time t_0.  Results from this calculation have been hard-coded into the data.cpp file.  The exposure at time t after an emission is then given by the solution to the diffusion equation implemented within the code, at the time t+t_0.  Note that in the Gaussian model t_0 can be negative.  The code terminates upon finding t_0.
+
+If opt_t0 is set to 0, the code reads in the hard-coded answer for t_0 previously calculated and stored in data.cpp.  Environments for which this has been performed are, with absorbing boundaries
+
+Office
+Nightclub
+Bus
+Lounge
+
+Office with differing viral inactivation rates:
+Office_Death_x0.25
+Office_Death_x0.5
+Office_Death_x2
+Office_Death_x4
+
+
+Office with differing ventilation rates:
+Office_Gamma_x0.25
+Office_Gamma_x0.5
+Office_Gamma_x2
+Office_Gamma_x4
+
+Nightclub with movement: Nightclub_Movement
+
+Future work on the code could refine the behaviour of the code around this point.
+
+
+--verb v: Specifies verbose output.
+
+--absorbing a [Default 1] : Flag 1 for absorbing boundary conditions i.e. the walls and floor absorb emitted particles.
+
+--reflecting R [Default 0] : Flag 1 for reflecting boundary conditions i.e. the walls reflect particles, while the floor is absorbant.
+
+Note that these two flags encode some redundancy.  I just wrote the code like this.  In order to have a non-absorbing floor, it would be necessary to alter the code for sedimentation rate, which is found in the function FindSedimentationRate.
+
+--deg_shift [Default 1] : Applies a multiplier to the viral inactivation rate
+
+--test [Default 0] : Runs a modified version of the code.  Output is generated describing exposure levels on a 2cm squared grid every 60 seconds, rather than at the locations of the uninfected people only.
+
+ 
+Outputs:
+
+The generation code outputs files Data/<environment>/Exposures_<emission type>_<Reflecting/Absorbing>_<radius>.out
+
+
+Analysis method:
+
+Inputs:
+
+The analysis code reads in the file Data/<environment>/Exposures_<emission type>_<Reflecting/Absorbing>_<radius>.out and simulates bottleneck sizes upon transmission.
+
+
+Flags:
+
+--viral_load v
+
+This flags specifies the effective viral load of emitted particles, in viruses causing infection per litre.  If not specified, the code caculates a value to fit a (currently hard-coded) number of infections over the course of the simulation.  The reason for specifying a viral load is that, where multiple environments are considered, the viral load should be constant across these environments.
+
+There is a special case of this parameter.  If v is set to precisely 1e+16, the code calculates outputs in a limiting case of the viral load, for which exposure to a droplet deterministically causes infection.  In this case the output of the code is not bottleneck sizes, but simple counts of the number of particles to which individuals are exposed.
+
+--phi p [Default 1] : Sets the parameter phi_env for the case in which no viral load is specified.
+
+--r0 r [Default 2.5] : Sets the parameter r0 for the case in which no viral load is specified.
+
+--verb v: Specifies verbose output.
+
+--absorbing a [Default 1] : Flag 1 for absorbing boundary conditions i.e. the walls and floor absorb emitted particles.
+
+--reflecting R [Default 0] : Flag 1 for reflecting boundary conditions i.e. the walls reflect particles, while the floor is absorbant.
+
+--move M [Default 0] : Flag 1 swaps the locations of individuals every 5 minutes using a method of random permutation.
+
+--alpha A [No default] : Initialises the code to model a population of individuals with different levels of emission, distributed according to a gamma distribution with parameters alpha and 1/alpha
+
+--vmult v [Default 1] : Multiplies the volume of particles emitted by v
+
+Outputs:
+
+The analysis code outputs files Data/<environment>/Bottlenecks_<emission_type>_<Reflecting/Absorbing>.out
+
