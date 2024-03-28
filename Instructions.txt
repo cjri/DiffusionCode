@@ -39,7 +39,7 @@ Flags:
 
 The generation code uses the following flags:
 
---env e [Default Office] : Environment e.g. Office.  Needs files to be set up for the environment.
+--env e [Default Office] : Environment e.g. Office.  Files need to have been set up for the environment to use a specific environment name.
 
 --emm m [Default Cough] : Type of emission e.g. Cough.
 
@@ -121,7 +121,7 @@ There is a special case of this parameter.  If v is set to precisely 1e+16, the 
 
 --alpha A [No default] : Initialises the code to model a population of individuals with different levels of emission, distributed according to a gamma distribution with parameters alpha and 1/alpha
 
---vmult v [Default 1] : Multiplies the volume of particles emitted by v
+--vmult v [Default 1] : Multiplies the volume of particles emitted by the factor v relative to the default
 
 Outputs:
 
