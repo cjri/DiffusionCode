@@ -44,6 +44,7 @@ struct options { //Options for running the code
     int variable_emissions; //Flag for modelling a population who emit different amounts of virus
     string alpha; //Parameterisation for the gamma distribution of infectivity in a population.  As (a, 1/a)
     int move; //Moving around.  Option for nightclub
+    double specify_k; //Option to specify the diffusion coefficient to equal a specific value
     double exp_per_hour; //Number of coughs or events per hour;
     double phi; //Value of phi_office.
     double vmult; //Multiplier for the volume when calcualting bottlenecks

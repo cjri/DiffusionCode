@@ -21,6 +21,7 @@ void GetCMLOptions (options& o, int argc, const char **argv) {
     o.phi=1;
     o.r0=2.5;
     o.vmult=1;
+    o.specify_k=-1;
     o.test_output=0;
     o.verb=0;
     o.variable_emissions=0;
@@ -58,6 +59,9 @@ void GetCMLOptions (options& o, int argc, const char **argv) {
         } else if (p_switch.compare("--viral_load")==0) {
             x++;
             o.viral_load=atof(argv[x]);
+        } else if (p_switch.compare("--specify_k")==0) {
+            x++;
+            o.specify_k=atof(argv[x]);
         } else if (p_switch.compare("--seed")==0) {
             x++;
             o.seed=atoi(argv[x]);
@@ -130,7 +134,11 @@ void ReadParameters(options& o, param& p) {
     p.inh=d;
     //Characteristic length
     p.L=pow(p.X*p.Y*p.Z,0.333333333333);
-    p.K=FindK(p.L,p.gamma);
+    if (o.specify_k==-1) {
+        p.K=FindK(p.L,p.gamma);
+    } else {
+        p.K=o.specify_k;
+    }
     //Convert inhalation in litres per minute into metres cubed per second
     p.inh=p.inh/(60*1000);  //Inhalation per minute converted to m^3 per second
     //Further convert into fraction of box volume per second.  Box is 40cm^2 times height of room
@@ -138,6 +146,9 @@ void ReadParameters(options& o, param& p) {
     if (o.verb==1) {
         cout << "Params X " << p.X << " Y " << p.Y << " Z " << p.Z << " V " << p.X*p.Y*p.Z << "\n";
         cout << "Characteristic L " << p.L << "\n";
+        if (o.specify_k!==-1) {
+            cout << "Specified ";
+        }
         cout << "K is " << p.K << "\n";
         cout << "Z_0 " << p.z_0 << "\n";
     }
