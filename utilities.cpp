@@ -144,6 +144,9 @@ void OptimiseInitialTAbsorbing (options& o, param& p, double& t, double Pi, vect
         for (unsigned int i=0;i<model.size();i++) {
             diff=diff+sqrt(pow(model[i].val-initial[i].val,2));
         }
+        if (o.verb>1) {
+            cout << "Difference " << diff << "\n";
+        }
     }
     t=t_best;
     cout << "Best t " << t_best << " at " << diff_best << "\n";
@@ -233,17 +236,37 @@ void OptimiseInitialTReflecting (options& o, param& p, double& t, double Pi, vec
 void CalculateTotalExposureAbsorbing(options& o, param& p, double Pi, double& total_exp_init) {
     double max=0;
     vector< vector<double> > initial_state;
-    for (double dx=0;dx<=p.X;dx=dx+0.02) {
-        for (double dy=0;dy<=p.Y;dy=dy+0.02) {
-            vector<double> d;
-            double increment=diffn2(p.K,Pi,p.X,p.Y,p.lambda,dx,dy,p.x_0,p.y_0,p.t_0);
-            d.push_back(dx);
-            d.push_back(dy);
-            d.push_back(increment);
-            initial_state.push_back(d);
-            total_exp_init=total_exp_init+increment;
-            if (increment>max) {
-                max=increment;
+    if (o.lowres==1) {
+        for (double dx=0;dx<=p.X;dx=dx+0.2) {
+            for (double dy=0;dy<=p.Y;dy=dy+0.2) {
+                vector<double> d;
+                double increment=diffn2(p.K,Pi,p.X,p.Y,p.lambda,dx,dy,p.x_0,p.y_0,p.t_0);
+                d.push_back(dx);
+                d.push_back(dy);
+                d.push_back(increment);
+                initial_state.push_back(d);
+                /*if (o.verb==1) {
+                    cout << dx << " " << dy << " " << increment << "\n";
+                }*/
+                total_exp_init=total_exp_init+increment;
+                if (increment>max) {
+                    max=increment;
+                }
+            }
+        }
+    } else {
+        for (double dx=0;dx<=p.X;dx=dx+0.02) {
+            for (double dy=0;dy<=p.Y;dy=dy+0.02) {
+                vector<double> d;
+                double increment=diffn2(p.K,Pi,p.X,p.Y,p.lambda,dx,dy,p.x_0,p.y_0,p.t_0);
+                d.push_back(dx);
+                d.push_back(dy);
+                d.push_back(increment);
+                initial_state.push_back(d);
+                total_exp_init=total_exp_init+increment;
+                if (increment>max) {
+                    max=increment;
+                }
             }
         }
     }
@@ -281,11 +304,22 @@ void MakeLocationGrids (options& o, param& p, vector<loc>& locations, vector< ve
     for (unsigned int i=0;i<locations.size();i++) {
         vector<loc> lg;
         loc l;
-        for (double dx=-0.2;dx<=0.2;dx=dx+0.02) {
-            for (double dy=-0.2;dy<=0.2;dy=dy+0.02) {
-                l.x=locations[i].x+dx;
-                l.y=locations[i].y+dy;
-                lg.push_back(l);
+        //Temporary change to resolution
+        if (o.lowres==1) {
+            for (double dx=-0.2;dx<=0.2;dx=dx+0.2) {
+                for (double dy=-0.2;dy<=0.2;dy=dy+0.2) {
+                    l.x=locations[i].x+dx;
+                    l.y=locations[i].y+dy;
+                    lg.push_back(l);
+                }
+            }
+        } else {
+            for (double dx=-0.2;dx<=0.2;dx=dx+0.02) {
+                for (double dy=-0.2;dy<=0.2;dy=dy+0.02) {
+                    l.x=locations[i].x+dx;
+                    l.y=locations[i].y+dy;
+                    lg.push_back(l);
+                }
             }
         }
         location_grids.push_back(lg);
@@ -299,13 +333,16 @@ void MakeLocationGrids (options& o, param& p, vector<loc>& locations, vector< ve
     }
 }
 
-void CalcluateExposuresAbsorbing(param& p, double Pi, const double total_exp_init, const vector< vector<loc> >& location_grids, vector<double>& times, vector< vector<double> >& exp_record) {
+void CalcluateExposuresAbsorbing(options& o, param& p, double Pi, const double total_exp_init, const vector< vector<loc> >& location_grids, vector<double>& times, vector< vector<double> >& exp_record) {
     double delta_t=1./3600.;
     vector<int> is0;        
     for (unsigned int i=0;i<location_grids.size();i++) {
         is0.push_back(0);
     }
     for (double k=1;k<=3600;k++) {
+        /*if (o.verb==1) {
+            cout << "Calculating for time " << k << "\n";
+        }*/
         times.push_back(k);
         vector<double> exps;
         for (unsigned int i=0;i<location_grids.size();i++) {

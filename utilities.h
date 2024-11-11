@@ -13,7 +13,7 @@ void OptimiseInitialTReflecting (options& o, param& p, double& t, double Pi, vec
 void CalculateTotalExposureAbsorbing(options& o, param& p, double Pi, double& total_exp_init);
 void CalculateTotalExposureReflecting(options& o, param& p, double Pi, double& total_exp_init);
 void MakeLocationGrids (options& o, param& p, vector<loc>& locations, vector< vector<loc> >& location_grids);
-void CalcluateExposuresAbsorbing(param& p, double Pi, const double total_exp_init, const vector< vector<loc> >& location_grids, vector<double>& times, vector< vector<double> >& exp_record);
+void CalcluateExposuresAbsorbing(options& o, param& p, double Pi, const double total_exp_init, const vector< vector<loc> >& location_grids, vector<double>& times, vector< vector<double> >& exp_record);
 void CalcluateExposuresAbsorbingTest(options& o, param& p, double Pi, const double total_exp_init);
 void CalcluateExposuresReflecting(options& o, param& p, double Pi, const double total_exp_init, const vector< vector<loc> >& location_grids, vector<double>& times, vector< vector<double> >& exp_record);
 void CalcluateExposuresReflectingTest(options& o, param& p, double Pi, const double total_exp_init);

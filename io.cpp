@@ -22,6 +22,8 @@ void GetCMLOptions (options& o, int argc, const char **argv) {
     o.r0=2.5;
     o.vmult=1;
     o.specify_k=-1;
+    o.lowres=0;
+    o.shorrt=0;
     o.test_output=0;
     o.verb=0;
     o.variable_emissions=0;
@@ -62,12 +64,18 @@ void GetCMLOptions (options& o, int argc, const char **argv) {
         } else if (p_switch.compare("--specify_k")==0) {
             x++;
             o.specify_k=atof(argv[x]);
+        } else if (p_switch.compare("--short")==0) {
+            x++;
+            o.shorrt=atof(argv[x]);
         } else if (p_switch.compare("--seed")==0) {
             x++;
             o.seed=atoi(argv[x]);
         } else if (p_switch.compare("--move")==0) {
             x++;
             o.move=atoi(argv[x]);
+        } else if (p_switch.compare("--lowres")==0) {
+            x++;
+            o.lowres=atoi(argv[x]);
         } else if (p_switch.compare("--exp_per_hour")==0) {
             x++;
             o.exp_per_hour=atoi(argv[x]);
@@ -146,7 +154,7 @@ void ReadParameters(options& o, param& p) {
     if (o.verb==1) {
         cout << "Params X " << p.X << " Y " << p.Y << " Z " << p.Z << " V " << p.X*p.Y*p.Z << "\n";
         cout << "Characteristic L " << p.L << "\n";
-        if (o.specify_k!==-1) {
+        if (o.specify_k!=-1) {
             cout << "Specified ";
         }
         cout << "K is " << p.K << "\n";
@@ -160,7 +168,7 @@ void ReadLocations(options& o, param& p, vector<loc>& locations) {
     double x;
     double y;
     loc l;
-    for (int i=0;i<1000;i++) {
+    for (int i=0;i<10000;i++) {
         if (!(loc_file >> x)) break;
         if (!(loc_file >> y)) break;
         if (i==0) {

@@ -70,8 +70,14 @@ int main(int argc, const char *argv[]){
             //In order to generate an estimate of the total emissions, calculate a grid of 2cm resolution at time zero=t_0
             cout << "Calculating total exposure...\n";
             double total_exp_init=0;
+            if (o.shorrt==1) {
+                CalculateTotalExposureAbsorbing(o,p,Pi,total_exp_init);
+                return 0;
+            }
+
             CalculateTotalExposureAbsorbing(o,p,Pi,total_exp_init);
 
+            
             if (o.test_output==1) {
                 CalcluateExposuresAbsorbingTest(o,p,Pi,total_exp_init);
                 return 0;
@@ -86,7 +92,7 @@ int main(int argc, const char *argv[]){
             //Find average exposure at each location: Within a 40cm square: Mean of included grid points.  One second resolution.
             vector< vector<double> > exp_record;
             vector<double> times;
-            CalcluateExposuresAbsorbing(p,Pi,total_exp_init,location_grids,times,exp_record);
+            CalcluateExposuresAbsorbing(o,p,Pi,total_exp_init,location_grids,times,exp_record);
 
             //Output data to a file
             ExportExposures (o,times,exp_record);

@@ -29,17 +29,19 @@ double finddiff (double K, double Pi, double A, double lambda, double x, double 
     for (int n=1;n<=100000;n++) {
         double d1=diffn1(n,K,Pi,A,lambda,x,x_0,t);
         if (abs(d1)<pow(10,-30)) {
-            small++;
+            if (tot>0&&abs(d1)<abs(tot*pow(10,-10))) { //New criterion
+                small++;
+            }
         } else {
             small=0;
             tot=tot+d1;
         }
-        if (small==2) {
+        if (small==10) {
             //cout << "N was " << n << "\n";
             break;
         }
     }
-    if (tot<pow(10,-25)) {
+    if (tot<pow(10,-25)) {  //What is happening here?  Change to relative measure?
         tot=0;
     }
     return tot;

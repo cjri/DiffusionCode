@@ -27,6 +27,53 @@ void GetPrecalcT0Absorbing (options& o, param& p) {
             p.t_0=9.89874*pow(10,-5);
         }
     }
+    
+    //Note: Added for temporary calculation.  Not for general use
+    if (o.env.compare("Hospital")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=1.01636*pow(10,-6);
+        }
+    }
+    
+    if (o.env.compare("Hospital_Faster")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=4.15149*pow(10,-7);
+        }
+    }
+
+    if (o.env.compare("Hospital500")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=5.21596*pow(10,-6);
+        }
+    }
+    if (o.env.compare("Hospital1000")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=2.60795*pow(10,-6);
+        }
+    }
+    if (o.env.compare("Hospital2000")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=1.30399*pow(10,-6);
+        }
+    }
+    if (o.env.compare("Hospital5000")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=5.21548*pow(10,-7);
+        }
+    }
+    if (o.env.compare("Hospital10000")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=2.60781*pow(10,-7);
+        }
+    }
+    if (o.env.compare("Hospital20000")==0) {
+        if (o.emm.compare("Cough")==0) {
+            p.t_0=1.30393*pow(10,-7);
+        }
+    }
+
+    
+    
     if (o.env.compare("Office_Death_x0.25")==0) {
         if (o.emm.compare("Cough")==0) {
             p.t_0=3.11206*pow(10,-5);
